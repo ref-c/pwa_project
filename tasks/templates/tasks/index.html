@@ -1,6 +1,9 @@
 {% extends "tasks/layout.html" %}
 {% block content%}
 <h1>Task List</h1>
+<h1>Welcome, {{ user.username }}!</h1>
+<p>Email: {{ user.email }}</p>
+<a href="{% url 'account_logout' %}">Logout</a>
    <ul>
        {% for task in tasks %}
            <li>{{ task }}</li>
