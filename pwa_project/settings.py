@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7b(e0=*juy^mq9z0-(45h%_3=tfr)71@u8fa3-v!g+_#6wmdl(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] #8001 localhost:8001/
 
 SITE_ID = 2
 
@@ -36,6 +36,7 @@ AUTHENTICATION_BACKENDS = (
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders' ,
     'users',
     'tasks',
     'django.contrib.sites',
@@ -65,6 +66,7 @@ LOGIN_REDIRECT_URL = '/users/'
 LOGOUT_REDIRECT_URL = '/users/login/'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'allauth.account.middleware.AccountMiddleware', 
     'django.middleware.security.SecurityMiddleware',
@@ -92,6 +94,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'users.context_processors.username' ,
             ],
         },
     },
@@ -153,3 +156,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_URL = '/static/'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React development server
+]

@@ -5,25 +5,16 @@ from django.urls import reverse
 from .models import Task
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .forms import NewTaskForm
+from .models import Category
 
 # Form class for adding a new task
-class NewTaskForm(forms.Form):
-    task = forms.CharField(
-        label='',  
-        widget=forms.TextInput(attrs={
-            'autofocus': 'autofocus', 
-            'id': 'task', 
-            'placeholder': 'New Task'  
-        })
-    )
 
 # Index View - Home page showing task list
+
 def index(request):
-    # Fetch all tasks from the database to display them
-    tasks = Task.objects.all()
-    return render(request, "tasks/index.html", {
-        "tasks": tasks  # Pass tasks to the template
-    })
+    categories = Category.objects.filter(parent=None).prefetch_related('subcategories', 'tasks')
+    return render(request, "tasks/index.html", {"categories": categories})
 
 # Add View - Adding a new task via form
 def add(request):
@@ -31,15 +22,13 @@ def add(request):
         form = NewTaskForm(request.POST)
         if form.is_valid():
             task_name = form.cleaned_data["task"]
-            Task.objects.create(name=task_name)  # Create a new Task object and save it in the database
+            category = form.cleaned_data.get("category")  # Get the optional category
+            Task.objects.create(name=task_name, category=category)  # Save the Task with category if provided
             return HttpResponseRedirect(reverse("tasks:index"))
         else:
-            return render(request, "tasks/add.html", {
-                "form": form
-            })
-    return render(request, "tasks/add.html", {
-        "form": NewTaskForm()
-    })
+            return render(request, "tasks/add.html", {"form": form})
+    
+    return render(request, "tasks/add.html", {"form": NewTaskForm()})
 
 # API View to Get a List of Tasks
 def get_tasks(request):

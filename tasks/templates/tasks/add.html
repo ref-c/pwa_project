@@ -5,13 +5,24 @@
 <form action="{% url 'tasks:add' %}" method="post" id="taskForm">
     {% csrf_token %}
     <table>
+        <!-- Render the form fields explicitly -->
         <tr>
-            <td> {{ form }} </td>
-            <td> <input type="submit" id="submit" disabled> </td>
+            <td>{{ form.task.label_tag }}</td>
+            <td>{{ form.task }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.category.label_tag }}</td>
+            <td>{{ form.category }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" id="submit" disabled>
+            </td>
         </tr>
     </table>
 </form>
 <a href="{% url 'tasks:index' %}">View Tasks</a>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
    document.querySelector("#task").onkeyup = () => {
